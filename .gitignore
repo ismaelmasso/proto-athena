@@ -1,0 +1,9 @@
+target
+*.iml
+*.ipr
+*.iws
+.classpath
+.settings
+alf_data_dev
+**.log
+**.log**
