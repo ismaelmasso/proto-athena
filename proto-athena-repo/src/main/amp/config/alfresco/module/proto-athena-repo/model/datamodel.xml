@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="rrdathena:datamodel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+  <description>RRD Data Model</description>
+  <author>RRD</author>
+  <version>1.0</version>
+
+
+  <!-- import base models -->
+  <imports>
+    <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d"/>
+    <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>
+  </imports>
+
+  <namespaces>
+    <namespace uri="http:/rrd.co.uk/alfresco/model/content/1.0" prefix="rrdathena"/>
+  </namespaces>
+
+  <aspects>
+    <aspect name="rrdathena:workflowsHolder">
+      <title>Workflows Holder</title>
+      <properties>
+        <property name="rrdathena:workflowIds">
+          <title>Workflow IDs</title>
+          <type>d:text</type>
+          <mandatory>false</mandatory>
+          <multiple>true</multiple>
+        </property>
+      </properties>
+    </aspect>
+
+    <aspect name="rrdathena:groupsHolder">
+      <title>Groups Holder</title>
+      <properties>
+          <property name="rrdathena:groupNames">
+              <title>Group Names</title>
+              <type>d:text</type>
+              <mandatory>false</mandatory>
+              <multiple>true</multiple>
+          </property>
+      </properties>
+    </aspect>
+  </aspects>
+</model>
