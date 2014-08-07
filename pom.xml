@@ -71,4 +71,11 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <distributionManagement>
+            <repository>
+                <id>maoo-cloudbees</id>
+                <url>dav:https://repository-maoo.forge.cloudbees.com/release</url>
+            </repository>
+    </distributionManagement>
 </project>

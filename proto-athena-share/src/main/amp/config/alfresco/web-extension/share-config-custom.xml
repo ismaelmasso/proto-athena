@@ -1,0 +1,48 @@
+<alfresco-config>
+
+    <!-- How Forms of nodes having custom aspects should look like -->
+    <config evaluator="aspect" condition="rrdathena:workflowsHolder">
+        <forms>
+            <form>
+                <field-visibility>
+                    <show id="rrdathena:workflowIds"/>
+                </field-visibility>
+            </form>
+        </forms>
+    </config>
+
+    <config evaluator="aspect" condition="rrdathena:groupsHolder">
+        <forms>
+            <form>
+                <field-visibility>
+                    <show id="rrdathena:groupNames"/>
+                </field-visibility>
+            </form>
+        </forms>
+    </config>
+
+    <!-- Which aspects to add on DocumentLibrary -->
+    <config evaluator="string-compare" condition="DocumentLibrary" replace="true">
+        <aspects>
+            <visible>
+                <aspect name="cm:generalclassifiable"/>
+                <aspect name="cm:versionable"/>
+                <aspect name="rrdathena:workflowsHolder"/>
+                <aspect name="rrdathena:groupsHolder"/>
+            </visible>
+        </aspects>
+    </config>
+
+    <!-- Which aspects to add on DocumentLibrary -->
+    <config evaluator="string-compare" condition="Repository" replace="true">
+        <aspects>
+            <visible>
+                <aspect name="cm:generalclassifiable"/>
+                <aspect name="cm:versionable"/>
+                <aspect name="rrdathena:workflowsHolder"/>
+                <aspect name="rrdathena:groupsHolder"/>
+            </visible>
+        </aspects>
+    </config>
+
+</alfresco-config>
