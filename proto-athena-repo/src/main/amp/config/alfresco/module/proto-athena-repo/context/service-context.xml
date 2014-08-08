@@ -28,4 +28,9 @@
         </property>
     </bean>
 
+    <!-- Lists all workflow definitions (overridden) -->
+    <bean id="webscript.org.alfresco.repository.workflow.workflow-definitions.get"
+          class="co.uk.rrd.alfresco.workflow.WorkflowDefinitionsGet"
+          parent="abstractWorkflowWebScript"></bean>
+
 </beans>
