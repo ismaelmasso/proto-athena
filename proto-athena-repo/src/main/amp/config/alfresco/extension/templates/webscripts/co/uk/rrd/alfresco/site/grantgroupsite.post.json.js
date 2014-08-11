@@ -9,12 +9,15 @@ function main()
 		status.setCode(status.STATUS_NOT_FOUND, "The site " + shortName + " does not exist.");
 		return;
 	}
+	var siteNode = site.node;
 
 	// Are we adding a group ?
 	if (json.has("group"))
 	{
 		// Get the user name
 		var groupName = json.getJSONObject("group").get("fullName");
+
+		logger.log("Granting group name '"+groupName+"' to site '"+shortName+"' shortName");
 		if (groupName == null)
 		{
 			status.setCode(status.STATUS_BAD_REQUEST, "The fullName for the group has not been set.");
@@ -34,18 +37,29 @@ function main()
 			return;
 		}
 
+		// Update the group list value
+		var groupNames = siteNode.properties["rrdathena:groupNames"];
+		logger.log("Current list of groups granted: "+groupNames);
+        if (groupNames == null) {
+            groupNames = [];
+        }
+		groupNames.push(groupName);
+        logger.log("New list of groups granted: "+groupNames);
 
-		// Set the membership details
-		groupNames = site.node.properties["rrdathena:groupNames"];
-		groupNames += ","+groupName;
-		site.node.properties["rrdathena:groupNames"] = groupNames;
-
-		return;
+        //Update the Site NodeRef
+        if (!siteNode.hasAspect("rrdathena:groupsHolder")) {
+            var props = {};
+            props["rrdathena:groupNames"] = groupNames;
+            siteNode.addAspect("rrdathena:groupsHolder",props);
+        } else {
+            siteNode.properties["rrdathena:groupNames"] = groupNames;
+        }
+        siteNode.save();
+        logger.log("Site Node After saving: "+siteNode.properties);
 	}
 	
 	// Neither person or group specified.
 	status.setCode(status.STATUS_BAD_REQUEST, "group has not been set.");
-	return;
 }
 
 main();
