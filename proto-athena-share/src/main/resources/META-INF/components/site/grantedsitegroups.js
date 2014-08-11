@@ -18,10 +18,10 @@
  */
  
 /**
- * AllowedSiteGroupsList component.
+ * GrantedSiteGroupsList component.
  * 
  * @namespace Alfresco
- * @class Alfresco.AllowedSiteGroupsList
+ * @class Alfresco.GrantedSiteGroupsList
  */
 (function()
 {  
@@ -38,15 +38,15 @@
    var $html = Alfresco.util.encodeHTML;
 
    /**
-    * AllowedSiteGroupsList constructor.
+    * GrantedSiteGroupsList constructor.
     * 
     * @param {String} htmlId The HTML id of the parent element
-    * @return {Alfresco.AllowedSiteGroupsList} The new AllowedSiteGroupsList instance
+    * @return {Alfresco.GrantedSiteGroupsList} The new GrantedSiteGroupsList instance
     * @constructor
     */
-   Alfresco.AllowedSiteGroupsList = function(htmlId)
+   Alfresco.GrantedSiteGroupsList = function(htmlId)
    {
-      Alfresco.AllowedSiteGroupsList.superclass.constructor.call(this, "Alfresco.AllowedSiteGroupsList", htmlId, ["button", "container", "datasource", "datatable", "json"]);
+      Alfresco.GrantedSiteGroupsList.superclass.constructor.call(this, "Alfresco.GrantedSiteGroupsList", htmlId, ["button", "container", "datasource", "datatable", "json"]);
 
       /* Initialise prototype properties */
       this.listWidgets = [];
@@ -58,7 +58,7 @@
       return this;
    };
    
-   YAHOO.extend(Alfresco.AllowedSiteGroupsList, Alfresco.component.Base,
+   YAHOO.extend(Alfresco.GrantedSiteGroupsList, Alfresco.component.Base,
    {
       /**
        * Object container for initialization options
@@ -69,7 +69,7 @@
       options:
       {
          /**
-          * siteId to AllowedSiteGroupsList in. "" if AllowedSiteGroupsList should be cross-site
+          * siteId to GrantedSiteGroupsList in. "" if GrantedSiteGroupsList should be cross-site
           *
           * @property siteId
           * @type string
@@ -97,7 +97,7 @@
        *
        * @method onReady
        */
-      onReady: function AllowedSiteGroupsList_onReady()
+      onReady: function GrantedSiteGroupsList_onReady()
       {
          // WebKit CSS fix
          if (YAHOO.env.ua.webkit > 0)
@@ -119,7 +119,7 @@
 
          // Hook remove action handler
          var me = this,
-            fnRemoveItemHandler = function AllowedSiteGroupsList_fnRemoveItemHandler(layer, args)
+            fnRemoveItemHandler = function GrantedSiteGroupsList_fnRemoveItemHandler(layer, args)
             {
                // call the remove method
                me.removeItem.call(me, args[1].anchor);
@@ -139,13 +139,13 @@
        * @method _setupDataTable
        * @private
        */
-      _setupDataTable: function AllowedSiteGroupsList_setupDataTable()
+      _setupDataTable: function GrantedSiteGroupsList_setupDataTable()
       {
          /**
           * DataTable Cell Renderers
           *
           * Each cell has a custom renderer defined as a custom function. See YUI documentation for details.
-          * These MUST be inline in order to have access to the Alfresco.AllowedSiteGroupsList class (via the "me" variable).
+          * These MUST be inline in order to have access to the Alfresco.GrantedSiteGroupsList class (via the "me" variable).
           */
          var me = this;
 
@@ -158,7 +158,7 @@
           * @param oColumn {object}
           * @param oData {object|string}
           */
-         var renderCellDescription = function AllowedSiteGroupsList_renderCellDescription(elCell, oRecord, oColumn, oData)
+         var renderCellDescription = function GrantedSiteGroupsList_renderCellDescription(elCell, oRecord, oColumn, oData)
          {
             // we currently render all results the same way
             var itemName = oRecord.getData("itemName"),
@@ -176,7 +176,7 @@
           * @param oColumn {object}
           * @param oData {object|string}
           */
-         var renderCellRole = function AllowedSiteGroupsList_renderCellActions(elCell, oRecord, oColumn, oData)
+         var renderCellRole = function GrantedSiteGroupsList_renderCellActions(elCell, oRecord, oColumn, oData)
          {
             Dom.setStyle(elCell.parentNode, "width", oColumn.width + "px");
             Dom.setStyle(elCell, "overflow", "visible");
@@ -203,7 +203,7 @@
           * @param oColumn {object}
           * @param oData {object|string}
           */
-         var renderCellRemoveButton = function AllowedSiteGroupsList_renderCellRemoveButton(elCell, oRecord, oColumn, oData)
+         var renderCellRemoveButton = function GrantedSiteGroupsList_renderCellRemoveButton(elCell, oRecord, oColumn, oData)
          {
             Dom.setStyle(elCell.parentNode, "width", oColumn.width + "px");
 
@@ -236,7 +236,7 @@
        * @param layer {object} Event fired
        * @param args {array} Event parameters (depends on event type)
        */
-      onItemSelected: function AllowedSiteGroupsList_onItemSelected(layer, args)
+      onItemSelected: function GrantedSiteGroupsList_onItemSelected(layer, args)
       {
          var data = args[1],
             itemData =
@@ -255,7 +255,7 @@
        * @method removeItem
        * @param row {HTMLElement} DOM reference to a TR element (or child thereof)
        */
-      removeItem: function AllowedSiteGroupsList_removeItem(row)
+      removeItem: function GrantedSiteGroupsList_removeItem(row)
       {
          var record = this.widgets.dataTable.getRecord(row);
 
@@ -275,7 +275,7 @@
        *
        * @method _enableDisableAddButton
        */
-      _enableDisableAddButton: function AllowedSiteGroupsList__enableDisableAddButton()
+      _enableDisableAddButton: function GrantedSiteGroupsList__enableDisableAddButton()
       {
          var enabled = this.widgets.dataTable.getRecordSet().getLength() > 0;
          this.widgets.addButton.set("disabled", !enabled);
@@ -287,7 +287,7 @@
        * @method addButtonClick
        * @param e {Object} Event arguments
        */
-      addButtonClick: function AllowedSiteGroupsList_addButtonClick(e)
+      addButtonClick: function GrantedSiteGroupsList_addButtonClick(e)
       {
          // sanity check - the add button shouldn't be clickable in this case
          var recordSet = this.widgets.dataTable.getRecordSet();
@@ -334,7 +334,7 @@
        * @param resultData {Object}
        * @private
        */
-      _processResultData: function AllowedSiteGroupsList__processResultData(resultData)
+      _processResultData: function GrantedSiteGroupsList__processResultData(resultData)
       {
          // check if we are already done
          if (resultData.index >= resultData.size)
@@ -353,20 +353,20 @@
        * @param resultData {Object}
        * @private
        */
-      _doAddResult: function AllowedSiteGroupsList__doAddResult(resultData)
+      _doAddResult: function GrantedSiteGroupsList__doAddResult(resultData)
       {
          // fetch the record to process
          var record = resultData.recs[resultData.index];
 
          // success handler
-         var success = function AllowedSiteGroupsList__doAddResult_success(response)
+         var success = function GrantedSiteGroupsList__doAddResult_success(response)
          {
             resultData.successes.push(resultData.index);
             resultData.index++;
             this._processResultData(resultData);
          };
 
-         var failure = function AllowedSiteGroupsList__doAddResult_failure(response)
+         var failure = function GrantedSiteGroupsList__doAddResult_failure(response)
          {
             resultData.failures.push(resultData.index);
             resultData.index++;
@@ -376,7 +376,7 @@
          // Repository call for each group
          Alfresco.util.Ajax.request(
          {
-            url: Alfresco.constants.PROXY_URI + "api/sites/" + this.options.siteId + "/memberships",
+            url: Alfresco.constants.PROXY_URI + "api/sites/" + this.options.siteId + "/grantgroupsite",
             method: "POST",
             requestContentType: "application/json",
             responseContentType: "application/json",
@@ -407,7 +407,7 @@
        * @param resultData {Object}
        * @private
        */
-      _finalizeResults: function AllowedSiteGroupsList__finalizeResults(resultData)
+      _finalizeResults: function GrantedSiteGroupsList__finalizeResults(resultData)
       {
          // remove the entries that were successful
          for (var i = resultData.successes.length - 1; i >= 0; i--)

@@ -1,0 +1,10 @@
+<webscript>
+  <shortname>Get granted site groups</shortname>
+  <description> <![CDATA[
+  Returns all groups granted for the current site
+  ]]></description>
+  <url>/api/sites/{shortname}/grantedsitegroups</url>
+  <format default="json">argument</format>
+  <authentication>user</authentication>
+  <transaction>none</transaction>
+</webscript>

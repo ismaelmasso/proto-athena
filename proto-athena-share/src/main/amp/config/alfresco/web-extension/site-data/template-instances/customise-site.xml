@@ -34,14 +34,10 @@
             </properties>
         </component>
 
-        <!-- Allowed Site Groups -->
-        <!--<component>-->
-            <!--<region-id>groupslist</region-id>-->
-            <!--<url>/components/invite/groupslist</url>-->
-        <!--</component>-->
+        <!-- Granted Site Groups -->
         <component>
-            <region-id>allowedsitegroups</region-id>
-            <url>/components/allowedsitegroups/allowedsitegroups</url>
+            <region-id>grantedsitegroups</region-id>
+            <url>/components/site/grantedsitegroups</url>
         </component>
     </components>
 </template-instance>

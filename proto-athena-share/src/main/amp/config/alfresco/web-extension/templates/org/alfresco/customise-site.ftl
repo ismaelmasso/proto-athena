@@ -13,7 +13,7 @@
       <div id="bd">
          <@region id="customise-pages" scope="template" />
          <div id="group-assoc">
-           <h2>Associate Groups</h2>
+           <h2>Associate Granted Groups</h2>
            <div class="yui-g grid">
               <div class="yui-u first column1">
                  <div class="yui-b">
@@ -22,8 +22,7 @@
               </div>
               <div class="yui-u column2">
                  <div class="yui-b">
-                    <#-- @region id="groupslist" scope="template" /-->
-                    <@region id="allowedsitegroups" scope="template" />
+                    <@region id="grantedsitegroups" scope="template" />
                  </div>
               </div>
            </div>
