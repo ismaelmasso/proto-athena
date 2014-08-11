@@ -1,9 +1,9 @@
 <webscript>
-  <shortname>Get granted site groups</shortname>
+  <shortname>Get visible site groups</shortname>
   <description> <![CDATA[
-  Returns all groups granted for the current site
+  Returns all groups visible for the current site
   ]]></description>
-  <url>/api/sites/{shortname}/grantedsitegroups</url>
+  <url>/api/sites/{shortname}/visiblesitegroups</url>
   <format default="json">argument</format>
   <authentication>user</authentication>
   <transaction>none</transaction>

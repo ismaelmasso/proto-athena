@@ -6,7 +6,7 @@
   'shortname' is the shortname of the web site
         group object, with fullName property
   ]]></description>
-  <url>/api/sites/{shortname}/grantgroupsite</url>
+  <url>/api/sites/{shortname}/visiblesitegroups</url>
   <format default="json">argument</format>
   <authentication>user</authentication>
   <transaction>required</transaction>

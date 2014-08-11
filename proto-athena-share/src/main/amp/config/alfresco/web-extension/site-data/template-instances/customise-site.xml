@@ -36,8 +36,8 @@
 
         <!-- Granted Site Groups -->
         <component>
-            <region-id>grantedsitegroups</region-id>
-            <url>/components/site/grantedsitegroups</url>
+            <region-id>visiblesitegroups</region-id>
+            <url>/components/site/visiblesitegroups</url>
         </component>
     </components>
 </template-instance>
