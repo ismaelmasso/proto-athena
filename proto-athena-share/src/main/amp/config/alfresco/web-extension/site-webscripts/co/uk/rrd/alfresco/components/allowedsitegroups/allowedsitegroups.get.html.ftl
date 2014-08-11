@@ -1,11 +1,11 @@
 <@markup id="css" >
    <#-- CSS Dependencies -->
-   <@link href="${url.context}/components/allowedsitegroups/allowedsitegroups.css"/>
+   <@link href="${url.context}/res/components/allowedsitegroups/allowedsitegroups.css"/>
 </@>
 
 <@markup id="js">
    <#-- JavaScript Dependencies -->
-   <script src="${url.context}/components/allowedsitegroups/allowedsitegroups.js" />
+   <@script src="${url.context}/res/components/allowedsitegroups/allowedsitegroups.js" />
 </@>
 
 <@markup id="widgets">
