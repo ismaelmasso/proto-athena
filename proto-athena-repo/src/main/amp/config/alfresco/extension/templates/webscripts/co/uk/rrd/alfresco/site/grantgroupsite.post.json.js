@@ -18,6 +18,7 @@ function main()
 		var groupName = json.getJSONObject("group").get("fullName");
 
 		logger.log("Granting group name '"+groupName+"' to site '"+shortName+"' shortName");
+
 		if (groupName == null)
 		{
 			status.setCode(status.STATUS_BAD_REQUEST, "The fullName for the group has not been set.");
@@ -39,12 +40,10 @@ function main()
 
 		// Update the group list value
 		var groupNames = siteNode.properties["rrdathena:groupNames"];
-		logger.log("Current list of groups granted: "+groupNames);
         if (groupNames == null) {
             groupNames = [];
         }
 		groupNames.push(groupName);
-        logger.log("New list of groups granted: "+groupNames);
 
         //Update the Site NodeRef
         if (!siteNode.hasAspect("rrdathena:groupsHolder")) {
@@ -55,7 +54,6 @@ function main()
             siteNode.properties["rrdathena:groupNames"] = groupNames;
         }
         siteNode.save();
-        logger.log("Site Node After saving: "+siteNode.properties);
 	}
 	
 	// Neither person or group specified.
