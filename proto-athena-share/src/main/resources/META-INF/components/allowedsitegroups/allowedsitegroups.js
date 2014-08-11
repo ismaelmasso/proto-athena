@@ -18,10 +18,10 @@
  */
  
 /**
- * GroupsList component.
+ * AllowedSiteGroupsList component.
  * 
  * @namespace Alfresco
- * @class Alfresco.GroupsList
+ * @class Alfresco.AllowedSiteGroupsList
  */
 (function()
 {  
@@ -38,15 +38,15 @@
    var $html = Alfresco.util.encodeHTML;
 
    /**
-    * GroupsList constructor.
+    * AllowedSiteGroupsList constructor.
     * 
     * @param {String} htmlId The HTML id of the parent element
-    * @return {Alfresco.GroupsList} The new GroupsList instance
+    * @return {Alfresco.AllowedSiteGroupsList} The new AllowedSiteGroupsList instance
     * @constructor
     */
-   Alfresco.GroupsList = function(htmlId)
+   Alfresco.AllowedSiteGroupsList = function(htmlId)
    {
-      Alfresco.GroupsList.superclass.constructor.call(this, "Alfresco.GroupsList", htmlId, ["button", "container", "datasource", "datatable", "json"]);
+      Alfresco.AllowedSiteGroupsList.superclass.constructor.call(this, "Alfresco.AllowedSiteGroupsList", htmlId, ["button", "container", "datasource", "datatable", "json"]);
 
       /* Initialise prototype properties */
       this.listWidgets = [];
@@ -58,7 +58,7 @@
       return this;
    };
    
-   YAHOO.extend(Alfresco.GroupsList, Alfresco.component.Base,
+   YAHOO.extend(Alfresco.AllowedSiteGroupsList, Alfresco.component.Base,
    {
       /**
        * Object container for initialization options
@@ -69,20 +69,12 @@
       options:
       {
          /**
-          * siteId to GroupsList in. "" if GroupsList should be cross-site
+          * siteId to AllowedSiteGroupsList in. "" if AllowedSiteGroupsList should be cross-site
           *
           * @property siteId
           * @type string
           */
-         siteId: "",
-
-         /**
-          * Available roles for the site.
-          *
-          * @property roles
-          * @type Array
-          */
-         roles: []
+         siteId: ""
       },
 
       /**
@@ -105,7 +97,7 @@
        *
        * @method onReady
        */
-      onReady: function GroupsList_onReady()
+      onReady: function AllowedSiteGroupsList_onReady()
       {
          // WebKit CSS fix
          if (YAHOO.env.ua.webkit > 0)
@@ -116,13 +108,6 @@
          // button to add all groups in the list
          this.widgets.addButton = Alfresco.util.createYUIButton(this, "add-button", this.addButtonClick);
 
-         // File Select menu button
-         this.widgets.allRolesSelect = Alfresco.util.createYUIButton(this, "selectallroles-button", this.onSelectAllRoles,
-         {
-            type: "menu",
-            menu: "selectallroles-menu"
-         });
-
          // setup the datasource
          this.widgets.dataSource = new YAHOO.util.DataSource([],
          {
@@ -132,12 +117,9 @@
          // setup of the datatable
          this._setupDataTable();
 
-         // make sure the add button is initially disabled
-         this._enableDisableAddButton();
-
          // Hook remove action handler
          var me = this,
-            fnRemoveItemHandler = function GroupsList_fnRemoveItemHandler(layer, args)
+            fnRemoveItemHandler = function AllowedSiteGroupsList_fnRemoveItemHandler(layer, args)
             {
                // call the remove method
                me.removeItem.call(me, args[1].anchor);
@@ -157,13 +139,13 @@
        * @method _setupDataTable
        * @private
        */
-      _setupDataTable: function GroupsList_setupDataTable()
+      _setupDataTable: function AllowedSiteGroupsList_setupDataTable()
       {
          /**
           * DataTable Cell Renderers
           *
           * Each cell has a custom renderer defined as a custom function. See YUI documentation for details.
-          * These MUST be inline in order to have access to the Alfresco.GroupsList class (via the "me" variable).
+          * These MUST be inline in order to have access to the Alfresco.AllowedSiteGroupsList class (via the "me" variable).
           */
          var me = this;
 
@@ -176,7 +158,7 @@
           * @param oColumn {object}
           * @param oData {object|string}
           */
-         var renderCellDescription = function GroupsList_renderCellDescription(elCell, oRecord, oColumn, oData)
+         var renderCellDescription = function AllowedSiteGroupsList_renderCellDescription(elCell, oRecord, oColumn, oData)
          {
             // we currently render all results the same way
             var itemName = oRecord.getData("itemName"),
@@ -194,60 +176,22 @@
           * @param oColumn {object}
           * @param oData {object|string}
           */
-         var renderCellRole = function GroupsList_renderCellActions(elCell, oRecord, oColumn, oData)
+         var renderCellRole = function AllowedSiteGroupsList_renderCellActions(elCell, oRecord, oColumn, oData)
          {
             Dom.setStyle(elCell.parentNode, "width", oColumn.width + "px");
             Dom.setStyle(elCell, "overflow", "visible");
 
             // cell where to add the element
             var cell = new Element(elCell),
-               id = oRecord.getData('id'),
-               buttonId = me.id + '-roleselector-' + id;
+               id = oRecord.getData('id');
 
             // create a clone of the template
-            var actionsColumnTemplate = Dom.get(me.id + '-role-column-template'),
-               templateInstance = actionsColumnTemplate.cloneNode(true);
+            var templateInstance = actionsColumnTemplate.cloneNode(true);
             templateInstance.setAttribute("id", "actionsDiv" + id);
             Dom.setStyle(templateInstance, "display", "");
 
-            // define the role dropdown menu and the event listeners
-            var rolesMenu = [], role;
-            for (var i = 0, j = me.options.roles.length; i < j; i++)
-            {
-               role = me.options.roles[i];
-               rolesMenu.push(
-               {
-                  text: me.msg("role." + role),
-                  value: role,
-                  onclick:
-                  {
-                     fn: me.onRoleSelect,
-                     obj:
-                     {
-                        record: oRecord,
-                        role: role
-                     },
-                     scope: me
-                  }
-               });
-            }
-
             // Insert the templateInstance to the column.
             cell.appendChild (templateInstance);
-
-            // Create a yui button for the role selector.
-            var fButton = Dom.getElementsByClassName("role-selector-button", "button", templateInstance);
-            var button = new YAHOO.widget.Button(fButton[0],
-            {
-               type: "menu",
-               name: buttonId,
-               label: me.getRoleLabel(oRecord),
-               menu: rolesMenu
-            });
-            me.listWidgets[id] =
-            {
-               button: button
-            };
          };
 
          /**
@@ -259,7 +203,7 @@
           * @param oColumn {object}
           * @param oData {object|string}
           */
-         var renderCellRemoveButton = function GroupsList_renderCellRemoveButton(elCell, oRecord, oColumn, oData)
+         var renderCellRemoveButton = function AllowedSiteGroupsList_renderCellRemoveButton(elCell, oRecord, oColumn, oData)
          {
             Dom.setStyle(elCell.parentNode, "width", oColumn.width + "px");
 
@@ -274,7 +218,6 @@
          var columnDefinitions =
          [
             { key: "item", label: "Item", sortable: false, formatter: renderCellDescription },
-            { key: "role", label: "Role", sortable: false, formatter: renderCellRole, width: 140 },
             { key: "remove", label: "Remove", sortable: false, formatter: renderCellRemoveButton, width: 30 }
          ];
 
@@ -286,21 +229,6 @@
       },
 
       /**
-       * Returns the role label for a given record.
-       *
-       * @method getRoleLabel
-       * @param record {YAHOO.widget.Record} YUI DataTable record
-       */
-      getRoleLabel: function GroupsList_getRoleLabel(record)
-      {
-         if (record.getData("role") !== undefined)
-         {
-            return this.msg('role.' + record.getData("role"));
-         }
-         return this.msg("groupslist.selectrole");
-      },
-
-      /**
        * Event handler for "itemSelected" bubbling event.
        * Adds an item to the list.
        *
@@ -308,7 +236,7 @@
        * @param layer {object} Event fired
        * @param args {array} Event parameters (depends on event type)
        */
-      onItemSelected: function GroupsList_onItemSelected(layer, args)
+      onItemSelected: function AllowedSiteGroupsList_onItemSelected(layer, args)
       {
          var data = args[1],
             itemData =
@@ -327,7 +255,7 @@
        * @method removeItem
        * @param row {HTMLElement} DOM reference to a TR element (or child thereof)
        */
-      removeItem: function GroupsList_removeItem(row)
+      removeItem: function AllowedSiteGroupsList_removeItem(row)
       {
          var record = this.widgets.dataTable.getRecord(row);
 
@@ -343,115 +271,13 @@
       },
 
       /**
-       * Select all roles dropdown event handler
-       *
-       * @method onSelectAllRoles
-       * @param sType {String} event type
-       * @param aArgs {Array} event arguments
-       * @param p_obj {Object} object containing record and role to set
-       */
-      onSelectAllRoles: function GroupsList_onFileSelect(sType, aArgs, p_obj)
-      {
-         var value = aArgs[1].value;
-         if (value === "")
-         {
-            return;
-         }
-
-         this._setAllRolesImpl(value);
-         this._enableDisableAddButton();
-         Event.preventDefault(aArgs[0]);
-      },
-
-      /**
-       * Called when the user select a role in the role dropdown
-       *
-       * @method onRoleSelect
-       * @param sType {String} event type
-       * @param aArgs {Array} event arguments
-       * @param p_obj {Object} object containing record and role to set
-       */
-      onRoleSelect: function GroupsList_onRoleSelect(sType, aArgs, p_obj)
-      {
-         // set the role for the passed-in record
-         var role = p_obj.role,
-            record = p_obj.record;
-
-         this._setRoleForRecord(record, role);
-
-         // update the add button
-         this._enableDisableAddButton();
-         Event.preventDefault(aArgs[0]);
-      },
-
-      /**
-       * Implementation of set all roles functionality
-       *
-       * @method _setAllRolesImpl
-       * @param roleName {String} The role to set all selected groups to
-       * @private
-       */
-      _setAllRolesImpl: function GroupsList__setAllRolesImpl(roleName)
-      {
-         var recordSet = this.widgets.dataTable.getRecordSet(),
-            record;
-         for (var i = 0, ii = recordSet.getLength(); i < ii; i++)
-         {
-            record = recordSet.getRecord(i);
-            this._setRoleForRecord(record, roleName);
-         }
-
-         // update the add button
-         this._enableDisableAddButton();
-      },
-
-      /**
-       * Sets the role for a given record
-       *
-       * @method _setRoleForRecord
-       * @param record {YAHOO.widget.Record} The DataTable record
-       * @param role {String} The role to set
-       * @private
-       */
-      _setRoleForRecord: function GroupsList__setRoleForRecord(record, role)
-      {
-         // set the new role
-         record.setData("role", role);
-
-         // update the button
-         this.listWidgets[record.getData("id")].button.set("label", this.getRoleLabel(record));
-      },
-
-      /**
-       * Returns whether all items have their role set correctly
-       *
-       * @method _checkAllRolesSet
-       * @private
-       */
-      _checkAllRolesSet: function GroupsList__checkRolesSet()
-      {
-         var recordSet = this.widgets.dataTable.getRecordSet(),
-            record;
-         for (var i = 0, j = recordSet.getLength(); i < j; i++)
-         {
-            record = recordSet.getRecord(i);
-            if (record.getData("role") === undefined)
-            {
-               return false;
-            }
-         }
-         return true;
-      },
-
-      /**
        * Enables or disables the add button.
-       * The add button is only enabled if a role has been selected for all items
        *
        * @method _enableDisableAddButton
        */
-      _enableDisableAddButton: function GroupsList__enableDisableAddButton()
+      _enableDisableAddButton: function AllowedSiteGroupsList__enableDisableAddButton()
       {
-         var enabled = this.widgets.dataTable.getRecordSet().getLength() > 0 && this._checkAllRolesSet();
+         var enabled = this.widgets.dataTable.getRecordSet().getLength() > 0;
          this.widgets.addButton.set("disabled", !enabled);
       },
 
@@ -461,11 +287,11 @@
        * @method addButtonClick
        * @param e {Object} Event arguments
        */
-      addButtonClick: function GroupsList_addButtonClick(e)
+      addButtonClick: function AllowedSiteGroupsList_addButtonClick(e)
       {
          // sanity check - the add button shouldn't be clickable in this case
          var recordSet = this.widgets.dataTable.getRecordSet();
-         if (recordSet.getLength() < 0 || !this._checkAllRolesSet())
+         if (recordSet.getLength() < 0)
          {
             this._enableDisableAddButton();
             return;
@@ -508,7 +334,7 @@
        * @param resultData {Object}
        * @private
        */
-      _processResultData: function GroupsList__processResultData(resultData)
+      _processResultData: function AllowedSiteGroupsList__processResultData(resultData)
       {
          // check if we are already done
          if (resultData.index >= resultData.size)
@@ -527,20 +353,20 @@
        * @param resultData {Object}
        * @private
        */
-      _doAddResult: function GroupsList__doAddResult(resultData)
+      _doAddResult: function AllowedSiteGroupsList__doAddResult(resultData)
       {
          // fetch the record to process
          var record = resultData.recs[resultData.index];
 
          // success handler
-         var success = function GroupsList__doAddResult_success(response)
+         var success = function AllowedSiteGroupsList__doAddResult_success(response)
          {
             resultData.successes.push(resultData.index);
             resultData.index++;
             this._processResultData(resultData);
          };
 
-         var failure = function GroupsList__doAddResult_failure(response)
+         var failure = function AllowedSiteGroupsList__doAddResult_failure(response)
          {
             resultData.failures.push(resultData.index);
             resultData.index++;
@@ -560,7 +386,6 @@
                {
                   fullName: record.getData('itemName')
                },
-               role: record.getData('role')
             },
             successCallback:
             {
@@ -582,7 +407,7 @@
        * @param resultData {Object}
        * @private
        */
-      _finalizeResults: function GroupsList__finalizeResults(resultData)
+      _finalizeResults: function AllowedSiteGroupsList__finalizeResults(resultData)
       {
          // remove the entries that were successful
          for (var i = resultData.successes.length - 1; i >= 0; i--)

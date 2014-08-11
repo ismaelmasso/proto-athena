@@ -4,6 +4,8 @@ function main()
 
    siteId = page.url.templateArgs.site;
 
+//@TODO - Change this URL to point to the custom repo Webscript, which fetches the Groups for a given user
+
    // get the roles available for the given site
    theUrl = "/api/sites/" + siteId + "/roles";
    json = remote.call(theUrl);
@@ -21,10 +23,10 @@ function main()
 
    // Widget instantiation metadata...
    var groupsList = {
-//      id : "AllowedSiteGroupsList",
-//      name : "Alfresco.AllowedSiteGroupsList",
-      id : "GroupsList",
-      name : "Alfresco.GroupsList",
+      id : "AllowedSiteGroupsList",
+      name : "Alfresco.AllowedSiteGroupsList",
+//      id : "GroupsList",
+//      name : "Alfresco.GroupsList",
       options : {
          siteId : (page.url.templateArgs.site != null) ? page.url.templateArgs.site : "",
          roles : model.siteRoles
