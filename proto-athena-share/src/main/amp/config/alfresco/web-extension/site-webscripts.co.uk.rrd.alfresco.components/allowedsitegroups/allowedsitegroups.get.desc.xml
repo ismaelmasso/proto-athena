@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Allowed Site Groups</shortname>
+  <description>Allowed Site Groups</description>
+  <url>/components/allowedsitegroups/allowedsitegroups</url>
+</webscript>
