@@ -1,0 +1,13 @@
+<webscript>
+  <shortname>Grants group's visibility to a site</shortname>
+  <description> <![CDATA[
+  Grants visibility to a given group in the current site, by adding it to the rrdathena:groupNames property
+  <br />
+  'shortname' is the shortname of the web site
+        group object, with fullName property
+  ]]></description>
+  <url>/api/sites/{shortname}/grantgroupsite</url>
+  <format default="json">argument</format>
+  <authentication>user</authentication>
+  <transaction>required</transaction>
+</webscript>
