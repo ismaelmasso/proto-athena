@@ -26,6 +26,7 @@ import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.site.SiteInfo;
 import org.alfresco.service.cmr.site.SiteService;
 import org.alfresco.service.cmr.workflow.WorkflowDefinition;
+import org.alfresco.service.namespace.QName;
 import org.apache.log4j.Logger;
 import org.springframework.extensions.webscripts.Cache;
 import org.springframework.extensions.webscripts.Status;
@@ -41,22 +42,36 @@ import org.springframework.util.StringUtils;
  */
 public class WorkflowDefinitionsGet extends AbstractWorkflowWebscript
 {
-    public static final String PARAM_INCLUDE = "include";
+
+    private static Logger logger = Logger.getLogger(WorkflowDefinitionsGet.class);
+    private static QName PROP_WORKFLOW_NAMES = QName.createQName("http:/rrd.co.uk/alfresco/model/content/1.0","workflowNames");
+
     private static final String PARAM_USER = "user";
     private static final String PARAM_SITES = "sites";
-    private static Logger logger = Logger.getLogger(WorkflowDefinitionsGet.class);
 
     SiteService siteService;
+    NodeService nodeService;
 
     public void setSiteService(SiteService siteService) {
         this.siteService = siteService;
     }
+    public void setNodeService(NodeService nodeService) { this.nodeService = nodeService; }
 
     @Override
     protected Map<String, Object> buildModel(WorkflowModelBuilder modelBuilder, WebScriptRequest req, Status status, Cache cache)
     {
-        HashMap<String,SiteInfo> sitesArray = new HashMap<String,SiteInfo>();
-        HashSet<String> workflowsArray = new HashSet<String>();
+        String user = req.getParameter(PARAM_USER);
+        String sites = req.getParameter(PARAM_SITES);
+
+        //Fetch the list of workflows related with user and/or sites specified in the request
+        HashSet<String> workflowsArray = getWorkflowDefinitions(user, sites);
+        String includeParam = StringUtils.arrayToDelimitedString(workflowsArray.toArray(),",");
+
+        IncludeNamesFilter includeFilter = null;
+        if (user != null || sites != null)
+        {
+            includeFilter = new IncludeNamesFilter(includeParam);
+        }
 
         ExcludeFilter excludeFilter = null;
         String excludeParam = req.getParameter(PARAM_EXCLUDE);
@@ -65,47 +80,22 @@ public class WorkflowDefinitionsGet extends AbstractWorkflowWebscript
             excludeFilter = new ExcludeFilter(excludeParam);
         }
 
-        //Iterate through user's site and all them to the site list
-        String user = req.getParameter(PARAM_USER);
-        if (user != null && user.length() > 0) {
-            List<SiteInfo> sites = siteService.listSites(user);
-            for (SiteInfo site : sites) {
-                sitesArray.put(site.getShortName(),site);
-            }
-        }
-
-        String sites = req.getParameter(PARAM_SITES);
-        if (sites != null && sites.length() > 0) {
-            for (String siteName : StringUtils.tokenizeToStringArray(sites, ",")) {
-                sitesArray.put(siteName,siteService.getSite(siteName));
-            }
-        }
-
-        for(SiteInfo site : sitesArray.values()) {
-
-        }
-
-        IncludeFilter includeFilter = null;
-        String includeParam = req.getParameter(PARAM_INCLUDE);
-
-        if (includeParam != null && includeParam.length() > 0)
-        {
-            includeFilter = new IncludeFilter(includeParam);
-        }
-        logger.debug(String.format("Invoking WorkflowDefinitionsGet with includes[%s] and excludes[%s]", includeParam, excludeParam));
-
         // list all workflow's definitions simple representation
         List<WorkflowDefinition> workflowDefinitions = workflowService.getDefinitions();
+
+        logger.debug(String.format("Invoking WorkflowDefinitionsGet with includes[%s] and excludes[%s]", includeParam, excludeParam));
 
         ArrayList<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
 
         for (WorkflowDefinition workflowDefinition : workflowDefinitions)
         {
-            // if present, filter in/out in/excluded definitions
-            if (includeFilter != null && includeFilter.isMatch(workflowDefinition.getName()))
+            String workflowDefinitionName = workflowDefinition.getName();
+            if (includeFilter != null && !includeFilter.isMatch(workflowDefinitionName)) {
+                //skip it
+            } else if (includeFilter == null || includeFilter.isMatch(workflowDefinitionName))
             {
                 results.add(modelBuilder.buildSimple(workflowDefinition));
-            } else if (excludeFilter == null || !excludeFilter.isMatch(workflowDefinition.getName()))
+            } else if (excludeFilter == null || !excludeFilter.isMatch(workflowDefinitionName))
             {
                 results.add(modelBuilder.buildSimple(workflowDefinition));
             }
@@ -115,12 +105,48 @@ public class WorkflowDefinitionsGet extends AbstractWorkflowWebscript
         return model;
     }
 
+    protected HashSet<String> getWorkflowDefinitions(String user, String sites) {
+        HashMap<String,SiteInfo> sitesArray = new HashMap<String,SiteInfo>();
+        HashSet<String> workflowsArray = new HashSet<String>();
+
+        //If user= is specified, iterate through user's sites and add them to siteArray
+        if (user != null && user.length() > 0) {
+            List<SiteInfo> siteList = siteService.listSites(user);
+            for (SiteInfo site : siteList) {
+                sitesArray.put(site.getShortName(),site);
+            }
+            logger.debug(String.format("List of user sites: [%s]", sitesArray.values()));
+        }
+
+        //If sites= is specified, add them to siteArray
+        if (sites != null && sites.length() > 0) {
+            for (String siteName : StringUtils.tokenizeToStringArray(sites, ",")) {
+                sitesArray.put(siteName,siteService.getSite(siteName));
+            }
+            logger.debug(String.format("Final list of sites: [%s]", sitesArray.values()));
+        }
+
+        //Iterate through siteArray and collect associated workflow IDs; adding them all to workflowsArray Set, we'll
+        //consequently compact it (removing duplicates)
+        for(SiteInfo site : sitesArray.values()) {
+            List<String> workflowIds = (List<String>)nodeService.getProperty(site.getNodeRef(), PROP_WORKFLOW_NAMES);
+            if (workflowIds != null) {
+                workflowsArray.addAll(workflowIds);
+            }
+        }
+        return workflowsArray;
+    }
+
     /**
      * Helper class to check for included items.
      */
-    public class IncludeFilter extends ExcludeFilter {
-        public IncludeFilter(String filters) {
-            super(filters);
+    protected class IncludeNamesFilter {
+        final List<String> workflowNames;
+        public IncludeNamesFilter(String workflowNames) {
+            this.workflowNames = Arrays.asList(StringUtils.tokenizeToStringArray(workflowNames, ","));
+        }
+        public boolean isMatch(String item) {
+            return workflowNames.contains(item);
         }
     }
 }

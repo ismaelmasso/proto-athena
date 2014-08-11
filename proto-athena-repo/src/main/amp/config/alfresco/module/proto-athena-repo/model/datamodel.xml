@@ -19,8 +19,8 @@
     <aspect name="rrdathena:workflowsHolder">
       <title>Workflows Holder</title>
       <properties>
-        <property name="rrdathena:workflowIds">
-          <title>Workflow IDs</title>
+        <property name="rrdathena:workflowNames">
+          <title>Workflow Names</title>
           <type>d:text</type>
           <mandatory>false</mandatory>
           <multiple>true</multiple>

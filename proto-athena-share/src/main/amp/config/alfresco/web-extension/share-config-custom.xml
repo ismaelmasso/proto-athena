@@ -5,7 +5,7 @@
         <forms>
             <form>
                 <field-visibility>
-                    <show id="rrdathena:workflowIds"/>
+                    <show id="rrdathena:workflowNames"/>
                 </field-visibility>
             </form>
         </forms>
