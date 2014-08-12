@@ -34,10 +34,17 @@
             </properties>
         </component>
 
-        <!-- Granted Site Groups -->
+        <!-- Visible Site Groups -->
         <component>
             <region-id>visiblesitegroups</region-id>
-            <url>/components/site/visiblesitegroups</url>
+            <url>/components/site/groups/visiblesitegroups</url>
         </component>
+
+        <!-- Visible Site Workflow Definitions -->
+        <component>
+            <region-id>visiblesiteworkflows</region-id>
+            <url>/components/site/workflows/visiblesiteworkflows</url>
+        </component>
+
     </components>
 </template-instance>
