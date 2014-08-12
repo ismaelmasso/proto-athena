@@ -31,7 +31,7 @@
              <div class="yui-g grid theme-border-3">
                <div class="yui-u first column1">
                  <div class="yui-b">
-                   <@region id="visiblesiteworkflows" scope="template" />
+                   <@region id="allsiteworkflows" scope="template" />
                  </div>
                </div>
                <div class="yui-u column2">
