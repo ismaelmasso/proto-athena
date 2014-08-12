@@ -1,72 +1,72 @@
-.groupslist
+.workflowlist
 {
    border: 1px solid #bababa;
    color: #000;
    margin: 10px 10px 10px 0;
 }
 
-.groupslist .inviteelist
+.workflowlist .inviteelist
 {
    height: 300px;
    overflow: auto;
    position: relative !important;
 }
 
-.groupslist .inviteelist table
+.workflowlist table
 {
    border: none;
    width: 100%;
 }
-.groupslist .inviteelist table thead
+.workflowlist table thead
 {
    display: none;
 }
-.groupslist .inviteelist table tr.yui-dt-odd
+.workflowlist table tr.yui-dt-odd
 {
    background-color: #fff;
 }
-.groupslist .inviteelist table td
+.workflowlist table td
 {
    border-top: 1px dashed #d9d9d9;
    border-right: medium none;
 }
-.groupslist .inviteelist table .yui-dt-last td
+.workflowlist table .yui-dt-last td
 {
    border-bottom: 1px dashed #d9d9d9;
 }
-.groupslist .inviteelist table tr td.yui-dt-empty
+.workflowlist table tr td.yui-dt-empty
 {
    background-color: inherit;
    border-bottom: none;   
 }
 
-.groupslist .inviteelist .user
+.workflowlist .user
 {
    border-bottom: 1px solid #e4e5e5;
    height: 55px;
    padding: 3px 225px 3px 66px;
 }
 
-.groupslist .inviteelist .user div.photo,
-.groupslist .inviteelist .user div.roleSelection,
-.groupslist .inviteelist .user div.details
+.workflowlist .user div.photo,
+.workflowlist .user div.roleSelection,
+.workflowlist .user div.details
 {
    float: left;
    position: relative;
 }
 
-.groupslist .inviteelist .user .details
+.workflowlist .user .details
 {
    padding-left: 5px;
    width: 90%;
 }
 
-.groupslist .inviteelist .user .details .uname
+.workflowlist .user .details .uname
 {
    font-weight: bold;
 }
 
-.groupslist .inviteelist .user .photo
+.workflowlist .user .photo
 {
    left: 60px;
    margin-left: -120px;
@@ -74,47 +74,47 @@
    width: 60px;           
 }
 
-.groupslist .inviteelist .user .roleSelection
+.workflowlist .user .roleSelection
 {
    margin-right: -100%;
    width: 220px;            
 }
 
-.groupslist .inviteelist a.remove-item-button:hover
+.workflowlist a.remove-item-button:hover
 {
    text-decoration: none;
 }
 
-.groupslist .inviteelist .removeIcon
+.workflowlist .removeIcon
 {
-   background: transparent url(../invite/images/remove-icon-16.png) no-repeat center center;
+   background: transparent url(../../invite/images/remove-icon-16.png) no-repeat center center;
    padding: 6px;
 }
 
-.groupslist .inviteelist .user .details span
+.workflowlist .user .details span
 {
    display: block;
 }
 
-.grouplistWrapper
+.workflowlistWrapper
 {
-   background: transparent url(../invite/images/green-arrow.png) no-repeat left 15%;
+   background: transparent url(../../invite/images/green-arrow.png) no-repeat left 15%;
    margin: 1em 0 0;
    padding-left: 50px;
 }
 
-.grouplistWrapper .sinvite
+.workflowlistWrapper .addworkflow
 {
    padding-top: 5px;
 }
 
-.grouplistWrapper .sinvite .back-to
+.workflowlistWrapper .addworkflow .back-to
 {
    padding-left: 0.5em;
    vertical-align: super;
 }
 
-.groupslist .invitelist-bar
+.workflowlist .siteworkflows-bar
 {
    background-color: #f5f5f5;
    border-bottom: 1px dotted #c0c0c0;

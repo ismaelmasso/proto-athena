@@ -134,9 +134,6 @@
             };
 
          YAHOO.Bubbling.addDefaultAction("remove-item-button", fnRemoveItemHandler);
-
-         // show the component now, this avoids painting issues of the dropdown button
-         //Dom.setStyle(this.id + "-invitationBar", "visibility", "visible");
       },
 
       /**
@@ -201,15 +198,10 @@
          ];
 
          // DataTable definition
-         this.widgets.dataTable = new YAHOO.widget.DataTable(this.id + "-inviteelist", columnDefinitions, this.widgets.dataSource,
+         this.widgets.dataTable = new YAHOO.widget.DataTable(this.id + "-grouplist", columnDefinitions, this.widgets.dataSource,
          {
             MSG_EMPTY: this.msg("groupslist.empty-list")
          });
-
-         this.widgets.dataTable.doBeforeLoadData = function VisibleSiteGroupsList_doBeforeLoadData(sRequest, oResponse, oPayload)
-         {
-            return true;
-         };
       },
 
       /**
@@ -223,8 +215,7 @@
       onItemSelected: function VisibleSiteGroupsList_onItemSelected(layer, args)
       {
          var data = args[1],
-            dupFound = false;
-            dtSize = this.widgets.dataTable.getLength(),
+            dupFound = false,
             itemData =
             {
                id: this.uniqueRecordId++,
@@ -232,9 +223,9 @@
                displayName: data.itemName.split('_')[1]
             };
 
-
-         for (var i = 0; i < dtSize; i++) {
-           itemName = this.widgets.dataTable.data.getRecord(i).getData("itemName")
+         var records = this.widgets.dataTable.getRecordSet().getRecords();
+         for (var i = 0; i < records.length; i++) {
+           itemName = records[i].getData("itemName")
            if (itemName == data.itemName) {
               dupFound = true;
            }

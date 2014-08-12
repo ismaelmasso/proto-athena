@@ -1,5 +1,5 @@
 <webscript>
   <shortname>Visible Site Groups</shortname>
   <description>Visible Site Groups</description>
-  <url>/components/site/visiblesitegroups</url>
+  <url>/components/site/groups/visiblesitegroups</url>
 </webscript>

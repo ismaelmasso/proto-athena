@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>visiblesiteworkflows</shortname>
+  <description>Displays a workflow picker component, to associate a workflow definition to a given node</description>
+  <url>/components/site/workflows/visiblesiteworkflows</url>
+</webscript>
