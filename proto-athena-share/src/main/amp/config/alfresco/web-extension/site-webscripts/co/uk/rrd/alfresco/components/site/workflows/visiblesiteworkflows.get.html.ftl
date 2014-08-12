@@ -18,9 +18,11 @@
          <div class="title theme-color-2">${msg("workflowlist.title")}</div>
          <div id="${args.htmlid}-workflowlist" class="workflowlist">
          </div>
-         <div class="sinvite">
-            <button id="${args.htmlid}-add-workflows">${msg("button.add-workflows")}</button>
-         </div>
+         <#if showAddButton>
+            <div class="sinvite">
+                <button id="${args.htmlid}-add-workflows">${msg("button.add-workflows")}</button>
+            </div>
+         </#if>
       </div>
    </@>
 </@>

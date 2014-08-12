@@ -48,6 +48,9 @@
         <component>
             <region-id>visiblesiteworkflows</region-id>
             <url>/components/site/workflows/visiblesiteworkflows</url>
+            <properties>
+                <action>select</action>
+            </properties>
         </component>
 
     </components>

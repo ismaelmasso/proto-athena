@@ -53,7 +53,7 @@
       this.uniqueRecordId = 1;
 
       // Decoupled event listeners
-      YAHOO.Bubbling.on("itemSelected", this.onItemSelected, this);
+      YAHOO.Bubbling.on("workflowAdded", this.onWorkflowAdded, this);
 
       return this;
    };
@@ -74,7 +74,16 @@
           * @property siteId
           * @type string
           */
-         siteId: ""
+         siteId: "",
+
+          /**
+           * Can be "add" or "select"; depending on the value, UI and features will change
+           *
+           * @property action
+           * @type string
+           */
+         action: "add"
+
       },
 
       /**
@@ -106,7 +115,11 @@
          }
 
          // setup the datasource
-         var visibleSiteWorkflowsUrl = Alfresco.constants.PROXY_URI + "/api/workflow-definitions?sites=" + this.options.siteId;
+         var visibleSiteWorkflowsUrl = Alfresco.constants.PROXY_URI + "/api/workflow-definitions";
+         if (this.options.action == "select") {
+            visibleSiteWorkflowsUrl += "?sites=" + this.options.siteId
+         }
+
          this.widgets.dataSource = new YAHOO.util.DataSource(visibleSiteWorkflowsUrl,
          {
             responseType: YAHOO.util.DataSource.TYPE_JSON,
@@ -120,15 +133,26 @@
          // setup of the datatable
          this._setupDataTable();
 
-         // Hook remove action handler
-         var me = this,
-            fnAddItemHandler = function VisibleSiteWorkflows_fnRemoveItemHandler(layer, args)
+         var me = this;
+         var fnActionItemHandler = function VisibleSiteWorkflows_fnActionItemHandler(layer, args)
             {
-               //@TODO - Yahoo Bubble Firing needed here
+               if (action == "select") {
+                   // call the remove method
+                   me.removeItem.call(me, args[1].anchor);
+                   args[1].stop = true;
+               } else if (action == "add") {
+                   YAHOO.Bubbling.fire("workflowAdded",
+                   {
+                      workflowDetails:
+                      {
+                         name: "name",
+                         title: "title"
+                      }
+                   });
+               }
+               YAHOO.Bubbling.addDefaultAction(action+"-item-button", fnAddItemHandler);
                return true;
             };
-
-         YAHOO.Bubbling.addDefaultAction("add-item-button", fnAddItemHandler);
       },
 
       /**
@@ -178,9 +202,9 @@
          {
             Dom.setStyle(elCell.parentNode, "width", oColumn.width + "px");
 
-            var desc =
+                desc =
                '<span id="' + me.id + '-addItem">' +
-               '  <a href="#" class="remove-item-button"><span class="removeIcon">&nbsp;</span></a>' +
+               '  <a href="#" class="'+me.action+'-item-button"><span class="'+me.action+'Icon">&nbsp;</span></a>' +
                '</span>';
             elCell.innerHTML = desc;
          };
@@ -189,7 +213,7 @@
          var columnDefinitions =
          [
             { key: "item", label: "Item", sortable: false, formatter: renderCellDescription },
-            { key: "add", label: "Add", sortable: false, formatter: renderCellAddButton, width: 30 }
+            { key: "action", label: "Action", sortable: false, formatter: renderCellAddButton, width: 30 }
          ];
 
          // DataTable definition
@@ -207,7 +231,7 @@
        * @param layer {object} Event fired
        * @param args {array} Event parameters (depends on event type)
        */
-      onItemSelected: function VisibleSiteWorkflows_onItemSelected(layer, args)
+      onWorkflowAdded: function VisibleSiteWorkflows_onWorkflowAdded(layer, args)
       {
          var data = args[1],
             dupFound = false,
@@ -217,7 +241,6 @@
                name: data.name,
                title: data.title
             };
-
          var records = this.widgets.dataTable.getRecordSet().getRecords();
          for (var i = 0; i < records.length; i++) {
            itemName = records[i].getData("name")
@@ -225,7 +248,6 @@
               dupFound = true;
            }
          }
-
          if (!dupFound) {
            this.widgets.dataTable.addRow(itemData);
          }

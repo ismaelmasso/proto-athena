@@ -26,18 +26,18 @@
                  </div>
               </div>
            </div>
-           <div id="workflow-def-assoc">
-             <h2>Associate Workflow Definitions</h2>
-             <div class="yui-g grid theme-border-3">
-               <div class="yui-u first column1">
-                 <div class="yui-b">
-                   <@region id="allsiteworkflows" scope="template" />
-                 </div>
+         </div>
+         <div id="workflow-def-assoc">
+           <h2>Associate Workflow Definitions</h2>
+           <div class="yui-g grid theme-border-3">
+             <div class="yui-u first column1">
+               <div class="yui-b">
+                 <@region id="allsiteworkflows" scope="template" />
                </div>
-               <div class="yui-u column2">
-                 <div class="yui-b">
-                   <@region id="visiblesiteworkflows" scope="template" />
-                 </div>
+             </div>
+             <div class="yui-u column2">
+               <div class="yui-b">
+                 <@region id="visiblesiteworkflows" scope="template" />
                </div>
              </div>
            </div>
