@@ -3,57 +3,46 @@ function main()
 	// Get the site 
 	var shortName = url.extension.split("/")[0];
 	var site = siteService.getSite(shortName);
-	if (site == null)
-	{
+	if (site == null) {
 		// Site cannot be found
 		status.setCode(status.STATUS_NOT_FOUND, "The site " + shortName + " does not exist.");
 		return;
 	}
 	var siteNode = site.node;
 
+    var groupNames = [];
+
 	// Are we adding a group ?
-	if (json.has("group"))
-	{
-		// Get the user name
-		var groupName = json.getJSONObject("group").get("fullName");
+	if (json.has("groups")) {
+	    var groups = json.getJSONArray("groups");
 
-		logger.log("Granting group name '"+groupName+"' to site '"+shortName+"' shortName");
+	    for (i=0; i < groups.length(); i++) {
+            group = groups.get(i);
 
-		if (groupName == null)
-		{
-			status.setCode(status.STATUS_BAD_REQUEST, "The fullName for the group has not been set.");
-			return;
-		}
-		
-		if(groupName.match("^GROUP_") == null)
-		{
-			status.setCode(status.STATUS_BAD_REQUEST, "Group Authority names should begin with 'GROUP_'.");
-			return;	
-		}
-			
-		var group = groups.getGroupForFullAuthorityName(groupName);
-		if (group == null)
-		{
-			status.setCode(status.STATUS_BAD_REQUEST, "The group with group name " + groupName + " could not be found.");
-			return;
-		}
+	    	// Get the user name
+		    var groupName = group.get("itemName");
+
+		    logger.log("Granting group name '"+groupName+"' to site '"+shortName+"' shortName");
+
+            if (groupName == null)
+            {
+                status.setCode(status.STATUS_BAD_REQUEST, "The fullName for the group has not been set.");
+                return;
+            }
+
+            if(groupName.match("^GROUP_") == null)
+            {
+                status.setCode(status.STATUS_BAD_REQUEST, "Group Authority names should begin with 'GROUP_'.");
+                return;
+            }
+            groupNames.push(groupName);
+        }
 
 		// Update the group list value
-		var groupNames = siteNode.properties["rrdathena:groupNames"];
-        if (groupNames == null) {
-            groupNames = [];
-        }
-		groupNames.push(groupName);
-
-        //Update the Site NodeRef
-        if (!siteNode.hasAspect("rrdathena:groupsHolder")) {
-            var props = {};
-            props["rrdathena:groupNames"] = groupNames;
-            siteNode.addAspect("rrdathena:groupsHolder",props);
-        } else {
-            siteNode.properties["rrdathena:groupNames"] = groupNames;
-        }
+		logger.log("Groupnames for site '"+shortName+"': "+groupNames);
+		siteNode.properties["rrdathena:groupNames"] = groupNames;
         siteNode.save();
+        return;
 	}
 	
 	// Neither person or group specified.

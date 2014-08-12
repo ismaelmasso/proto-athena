@@ -11,11 +11,10 @@ function main() {
 
     // Get the list of granted groups for the current site
     groupNames = site.node.properties["rrdathena:groupNames"];
+
     if (groupNames == null) {
-        groups = [];
-    } else {
-        groups = groupNames.split(",");
+        groupNames = [];
     }
-    model.groups = groups;
+    model.groups = groupNames;
 }
 main();
