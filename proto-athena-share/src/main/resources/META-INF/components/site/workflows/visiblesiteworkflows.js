@@ -145,11 +145,13 @@
                    args[1].stop = true;
                } else if (me.options.action == "add") {
                    //@TODO - Would be cleaner to access data, instead of navigating HTML
+                   //@TODO - This is a very ugly/weak statement, fix it ASAP
                    var containerEl = args[1].el.parentElement.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild;
 
                    //@TODO - I really don't like how workflow name/title is extracted by the HTML
                    var name = containerEl.firstElementChild.textContent;
-                   var title = containerEl.textContent.split(name)[0].replace('(','').replace(')','');
+                   var title = containerEl.textContent.split(name)[0].trim();
+                   name = name.replace('(','').replace(')','').trim();
 
                    YAHOO.Bubbling.fire("workflowAdded",
                    {
@@ -251,7 +253,9 @@
                    id: this.uniqueRecordId++,
                    name: data.name,
                    title: data.title
-                };
+             };
+
+             //Avoid duplicates
              var records = this.widgets.dataTable.getRecordSet().getRecords();
              for (var i = 0; i < records.length; i++) {
                itemName = records[i].getData("name")
@@ -266,12 +270,32 @@
       },
 
       /**
+       * Remove item action handler
+       *
+       * @method removeItem
+       * @param row {HTMLElement} DOM reference to a TR element (or child thereof)
+       */
+      removeItem: function VisibleSiteGroupsList_removeItem(row)
+      {
+         var record = this.widgets.dataTable.getRecord(row);
+
+         // Fire the personDeselected event
+         YAHOO.Bubbling.fire("itemDeselected",
+         {
+            itemName: record.getData("itemName")
+         });
+
+         // remove the element
+         this.widgets.dataTable.deleteRow(record);
+      },
+
+      /**
        * Event handler for "Add" button click. Initiates the add process
        *
        * @method addButtonClick
        * @param e {Object} Event arguments
        */
-      addButtonClick: function VisibleSiteGroupsList_addButtonClick(e)
+      addButtonClick: function VisibleSiteWorkflows_addButtonClick(e)
       {
          // sanity check - the add button shouldn't be clickable in this case
          var recordSet = this.widgets.dataTable.getRecordSet();
@@ -293,9 +317,20 @@
          var dataPayload = { workflows: [] };
          for (var i = 0; i < recordSet.getLength(); i++) {
              dataPayload.workflows.push({
-                 name: recordSet.getRecord(i).getData("name")
+                 itemName: recordSet.getRecord(i).getData("name")
              });
          }
+
+         // success handler
+         var success = function VisibleSiteWorkflows__doAddResult_success(response)
+         {
+            recordSet.success = true;
+         };
+
+         var failure = function VisibleSiteWorkflows__doAddResult_failure(response)
+         {
+            recordSet.failure = true;
+         };
 
          //Submit the JSON payload to Repo Webscript
          Alfresco.util.Ajax.request(
@@ -319,7 +354,14 @@
 
           // remove wait message
           this.widgets.feedbackMessage.destroy();
-      }
 
+          // show a feedback message
+          this.widgets.feedbackMessage = Alfresco.util.PopupManager.displayMessage(
+          {
+             text: this.msg("message.result"),
+             spanClass: "wait",
+             displayTime: 1
+          });
+      }
    });
 })();

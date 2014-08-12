@@ -20,7 +20,7 @@
          </div>
          <#if showAddButton>
             <div class="sinvite">
-                <button id="${args.htmlid}-add-workflows">${msg("button.add-workflows")}</button>
+                <button id="${args.htmlid}-add-button">${msg("button.add-workflows")}</button>
             </div>
          </#if>
       </div>

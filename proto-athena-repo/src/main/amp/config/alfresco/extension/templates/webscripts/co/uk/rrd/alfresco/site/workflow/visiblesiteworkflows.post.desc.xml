@@ -1,0 +1,13 @@
+<webscript>
+  <shortname>Grants Workflow Definition visibility to a site</shortname>
+  <description> <![CDATA[
+  Grants visibility to a given Workflow Definition in the current site, by adding it to the rrdathena:workflowNames property
+  <br />
+  'shortname' is the shortname of the web site
+        Workflow Definition object
+  ]]></description>
+  <url>/api/sites/{shortname}/visiblesiteworkflows</url>
+  <format default="json">argument</format>
+  <authentication>user</authentication>
+  <transaction>required</transaction>
+</webscript>

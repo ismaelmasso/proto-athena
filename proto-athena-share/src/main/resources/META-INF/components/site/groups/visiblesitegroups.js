@@ -367,6 +367,14 @@
 
          // remove wait message
          this.widgets.feedbackMessage.destroy();
+
+          // show a feedback message
+          this.widgets.feedbackMessage = Alfresco.util.PopupManager.displayMessage(
+          {
+             text: this.msg("message.result"),
+             spanClass: "wait",
+             displayTime: 1
+          });
       }
    });
 })();
