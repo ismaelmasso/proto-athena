@@ -14,7 +14,7 @@
          <@region id="customise-pages" scope="template" />
          <div id="group-assoc">
            <h2>Associate Visible Groups</h2>
-           <div class="yui-g grid">
+           <div class="yui-g grid theme-border-3">
               <div class="yui-u first column1">
                  <div class="yui-b">
                     <@region id="group-finder" scope="template" />
