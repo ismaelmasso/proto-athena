@@ -136,11 +136,13 @@
          var me = this;
          var fnActionItemHandler = function VisibleSiteWorkflows_fnActionItemHandler(layer, args)
             {
+            alert("Bubbling event workflowAdded!");
                if (action == "select") {
                    // call the remove method
                    me.removeItem.call(me, args[1].anchor);
                    args[1].stop = true;
                } else if (action == "add") {
+
                    YAHOO.Bubbling.fire("workflowAdded",
                    {
                       workflowDetails:
@@ -150,7 +152,7 @@
                       }
                    });
                }
-               YAHOO.Bubbling.addDefaultAction(action+"-item-button", fnAddItemHandler);
+               YAHOO.Bubbling.addDefaultAction(action+"-item-button", fnActionItemHandler);
                return true;
             };
       },

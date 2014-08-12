@@ -2,7 +2,7 @@ function main()
 {
    var siteId = page.url.templateArgs.site;
 
-   model.showAddButton = (args.action != "select")
+   model.showAddButton = (args.action == "select")
 
    // Widget instantiation metadata...
    var workflowsList = {
