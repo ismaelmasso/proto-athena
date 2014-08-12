@@ -120,6 +120,9 @@
             visibleSiteWorkflowsUrl += "?sites=" + this.options.siteId
          }
 
+         // button to add all groups in the list
+         this.widgets.addButton = Alfresco.util.createYUIButton(this, "add-button", this.addButtonClick);
+
          this.widgets.dataSource = new YAHOO.util.DataSource(visibleSiteWorkflowsUrl,
          {
             responseType: YAHOO.util.DataSource.TYPE_JSON,
@@ -136,25 +139,30 @@
          var me = this;
          var fnActionItemHandler = function VisibleSiteWorkflows_fnActionItemHandler(layer, args)
             {
-            alert("Bubbling event workflowAdded!");
-               if (action == "select") {
+               if (me.options.action == "select") {
                    // call the remove method
                    me.removeItem.call(me, args[1].anchor);
                    args[1].stop = true;
-               } else if (action == "add") {
+               } else if (me.options.action == "add") {
+                   //@TODO - Would be cleaner to access data, instead of navigating HTML
+                   var containerEl = args[1].el.parentElement.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild;
+
+                   //@TODO - I really don't like how workflow name/title is extracted by the HTML
+                   var name = containerEl.firstElementChild.textContent;
+                   var title = containerEl.textContent.split(name)[0].replace('(','').replace(')','');
 
                    YAHOO.Bubbling.fire("workflowAdded",
                    {
                       workflowDetails:
                       {
-                         name: "name",
-                         title: "title"
+                         name: name,
+                         title: title
                       }
                    });
                }
-               YAHOO.Bubbling.addDefaultAction(action+"-item-button", fnActionItemHandler);
                return true;
             };
+         YAHOO.Bubbling.addDefaultAction(this.options.action+"-item-button", fnActionItemHandler);
       },
 
       /**
@@ -206,7 +214,7 @@
 
                 desc =
                '<span id="' + me.id + '-addItem">' +
-               '  <a href="#" class="'+me.action+'-item-button"><span class="'+me.action+'Icon">&nbsp;</span></a>' +
+               '  <a href="#" class="'+me.options.action+'-item-button"><span class="'+me.options.action+'Icon">&nbsp;</span></a>' +
                '</span>';
             elCell.innerHTML = desc;
          };
@@ -221,7 +229,7 @@
          // DataTable definition
          this.widgets.dataTable = new YAHOO.widget.DataTable(this.id + "-workflowlist", columnDefinitions, this.widgets.dataSource,
          {
-            MSG_EMPTY: this.msg("groupslist.empty-list")
+            MSG_EMPTY: this.msg("workflowlist.empty-list")
          });
       },
 
@@ -235,25 +243,82 @@
        */
       onWorkflowAdded: function VisibleSiteWorkflows_onWorkflowAdded(layer, args)
       {
-         var data = args[1],
-            dupFound = false,
-            itemData =
+         if (this.options.action == "select") {
+             var data = args[1].workflowDetails,
+                dupFound = false,
+                itemData =
+                {
+                   id: this.uniqueRecordId++,
+                   name: data.name,
+                   title: data.title
+                };
+             var records = this.widgets.dataTable.getRecordSet().getRecords();
+             for (var i = 0; i < records.length; i++) {
+               itemName = records[i].getData("name")
+               if (itemName == data.name) {
+                  dupFound = true;
+               }
+             }
+             if (!dupFound) {
+               this.widgets.dataTable.addRow(itemData);
+             }
+         }
+      },
+
+      /**
+       * Event handler for "Add" button click. Initiates the add process
+       *
+       * @method addButtonClick
+       * @param e {Object} Event arguments
+       */
+      addButtonClick: function VisibleSiteGroupsList_addButtonClick(e)
+      {
+         // sanity check - the add button shouldn't be clickable in this case
+         var recordSet = this.widgets.dataTable.getRecordSet();
+         if (recordSet.getLength() < 0)
+         {
+            this._enableDisableAddButton();
+            return;
+         }
+
+         // show a wait message
+         this.widgets.feedbackMessage = Alfresco.util.PopupManager.displayMessage(
+         {
+            text: this.msg("message.please-wait"),
+            spanClass: "wait",
+            displayTime: 0
+         });
+
+         //Create JSON payload
+         var dataPayload = { workflows: [] };
+         for (var i = 0; i < recordSet.getLength(); i++) {
+             dataPayload.workflows.push({
+                 name: recordSet.getRecord(i).getData("name")
+             });
+         }
+
+         //Submit the JSON payload to Repo Webscript
+         Alfresco.util.Ajax.request(
+         {
+            url: Alfresco.constants.PROXY_URI + "api/sites/" + this.options.siteId + "/visiblesiteworkflows",
+            method: "POST",
+            requestContentType: "application/json",
+            responseContentType: "application/json",
+            dataObj: dataPayload,
+            successCallback:
             {
-               id: this.uniqueRecordId++,
-               name: data.name,
-               title: data.title
-            };
-         var records = this.widgets.dataTable.getRecordSet().getRecords();
-         for (var i = 0; i < records.length; i++) {
-           itemName = records[i].getData("name")
-           if (itemName == data.name) {
-              dupFound = true;
-           }
-         }
-         if (!dupFound) {
-           this.widgets.dataTable.addRow(itemData);
-         }
-         this._enableDisableAddButton();
+               fn: success,
+               scope: this
+            },
+            failureCallback:
+            {
+               fn: failure,
+               scope: this
+            }
+         });
+
+          // remove wait message
+          this.widgets.feedbackMessage.destroy();
       }
 
    });

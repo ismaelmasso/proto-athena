@@ -200,7 +200,7 @@
          // DataTable definition
          this.widgets.dataTable = new YAHOO.widget.DataTable(this.id + "-grouplist", columnDefinitions, this.widgets.dataSource,
          {
-            MSG_EMPTY: this.msg("groupslist.empty-list")
+            MSG_EMPTY: this.msg("grouplist.empty-list")
          });
       },
 
@@ -255,7 +255,6 @@
 
          // remove the element
          this.widgets.dataTable.deleteRow(record);
-         this._enableDisableAddButton();
       },
 
       /**
@@ -284,9 +283,6 @@
             this._enableDisableAddButton();
             return;
          }
-
-         // disable button
-         this.widgets.addButton.set("disabled", true);
 
          // show a wait message
          this.widgets.feedbackMessage = Alfresco.util.PopupManager.displayMessage(
