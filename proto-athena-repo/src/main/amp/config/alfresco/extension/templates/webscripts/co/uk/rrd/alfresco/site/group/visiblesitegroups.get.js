@@ -11,7 +11,6 @@ function main() {
 
     // Get the list of granted groups for the current site
     groupNames = site.node.properties["rrdathena:groupNames"];
-
     if (groupNames == null) {
         groupNames = [];
     }
