@@ -14,7 +14,7 @@ You can access the publicly available (released and nightly-built) binaries with
 
 http://repository-maoo.forge.cloudbees.com/release/co/uk/rrd/alfresco
 
-Follow the [steps to install](https://github.com/gerardharvey/proto-athena/INSTALL.md) it in Alfresco.
+Follow the [steps to install](https://github.com/gerardharvey/proto-athena/blob/master/INSTALL.md) it in Alfresco.
 
 Proto-athena was developed and tested against _Alfresco Enterprise 4.2.2_
 
