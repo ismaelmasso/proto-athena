@@ -73,9 +73,28 @@
     </repositories>
 
     <distributionManagement>
-            <repository>
-                <id>maoo-cloudbees</id>
-                <url>dav:https://repository-maoo.forge.cloudbees.com/release</url>
-            </repository>
+        <repository>
+            <id>maoo-cloudbees</id>
+            <url>dav:https://repository-maoo.forge.cloudbees.com/release</url>
+        </repository>
+        <snapshotRepository>
+            <id>maoo-cloudbees</id>
+            <url>dav:https://repository-maoo.forge.cloudbees.com/release</url>
+        </snapshotRepository>
     </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <arguments>-Ppurge</arguments>
+                    <goals>deploy</goals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
