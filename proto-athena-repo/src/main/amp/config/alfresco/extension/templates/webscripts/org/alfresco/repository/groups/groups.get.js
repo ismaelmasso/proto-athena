@@ -22,8 +22,6 @@ function main ()
         sortBy = "displayName";
     }
 
-	logger.log("Passing site to /api/groups : "+siteShortName);
-	logger.log("shortNameFilter: "+shortNameFilter);
     if (siteShortName != null)
     {
         var site = siteService.getSite(siteShortName);

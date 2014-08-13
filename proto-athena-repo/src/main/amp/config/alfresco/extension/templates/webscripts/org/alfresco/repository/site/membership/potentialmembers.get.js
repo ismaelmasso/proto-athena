@@ -136,7 +136,7 @@ function contains(arr, value) {
     return false;
 }
 
-//RRD: util method
+//RRD: util method (@TODO - duplicated with people.get.js)
 function arrContains(arr, value) {
     var i = arr.length;
     while (i--) {

@@ -1,0 +1,12 @@
+<webscript>
+   <shortname>Get People</shortname>
+   <description>
+      Get a collection of people stored in the repository. This can optionally be
+      filtered according to a given filter query string
+      If the optional site parameter is given, then the results will only include groups related to the site, following the rrdathena:groupNames property value<
+   </description>
+   <url>/api/people?filter={filterQuery?}&amp;site={site?}</url>
+   <format default="json">argument</format>
+   <authentication>user</authentication>
+   <transaction allow="readonly">required</transaction>
+</webscript>
