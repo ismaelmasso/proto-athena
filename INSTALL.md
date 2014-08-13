@@ -18,7 +18,7 @@ Installing proto-athena module(s)
     ...
     <repository>
         <id>maoo-cloudbees</id>
-        <url>dav:https://repository-maoo.forge.cloudbees.com/release</url>
+        <url>https://repository-maoo.forge.cloudbees.com/release</url>
     </repository>
 </repositories>
 ```
