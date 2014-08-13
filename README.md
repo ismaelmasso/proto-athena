@@ -6,7 +6,7 @@ This means that users of different sites can never access the same data, unless 
 
 Although Alfresco Site were supposed to be designed with isolation in mind, there are still some parts of the system (such as users, groups and workflows) that are shared across sites: this modules will allow Site Managers to _whitelist_ groups and workflows that need to be shown/chosen/configured within a given site.
 
-![Screenshot of Customise Site page](https://github.com/gerardharvey/proto-athena/images/customise-site.png)
+![Screenshot of Customise Site page](https://github.com/gerardharvey/proto-athena/blob/master/images/customise-site.png)
 
 Where to download binaries
 ---
