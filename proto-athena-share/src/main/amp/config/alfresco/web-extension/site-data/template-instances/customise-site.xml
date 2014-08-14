@@ -30,7 +30,7 @@
             <properties>
                 <setFocus>true</setFocus>
                 <addButtonSuffix>&gt;&gt;</addButtonSuffix>
-                <dataWebScript>api/sites/[siteId]/potentialmembers?authorityType=GROUP</dataWebScript>
+                <dataWebScript>api/sites/[siteId]/potentialmembers?authorityType=GROUP&amp;showAll=true</dataWebScript>
             </properties>
         </component>
 

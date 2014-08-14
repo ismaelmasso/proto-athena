@@ -3,6 +3,7 @@ function main()
    // Get the args
    var siteShortName = url.templateArgs.shortname,
       site = siteService.getSite(siteShortName),
+      showAll = args.showAll,
       filter = (args.filter != null) ? args.filter : (args.shortNameFilter != null) ? args.shortNameFilter : "",
       maxResults = (args.maxResults == null) ? 10 : parseInt(args.maxResults, 10),
       authorityType = args.authorityType,
@@ -18,6 +19,9 @@ function main()
    var groupNames = siteNode.properties["rrdathena:groupNames"];
    if (groupNames == null) {
        groupNames = [];
+   } else if (showAll == "true") {
+       groupNames = null;
+       logger.debug("Set groupNames to null, no filtering applied");
    }
    logger.debug("Group Names: "+groupNames);
 
@@ -58,17 +62,19 @@ function main()
          //with groupNames list
          var personNode = people.getPerson(name);
          var personGroups = people.getContainerGroups(personNode);
-         var isVisible = false;
+         var isVisible = (groupNames == null);
 
-         for (j = 0, jj = personGroups.length; j < jj; j++) {
-            personGroup = personGroups[j];
-            var personGroupName = personGroups[j].properties.authorityName;
-            logger.debug("Iterating on person '"+name+"' Group '"+personGroupName+"'; contained? "+arrContains(groupNames,personGroupName));
-            if (arrContains(groupNames,personGroupName)) {
-                isVisible = true;
-            }
+         if (groupNames) {
+             for (j = 0, jj = personGroups.length; j < jj; j++) {
+                personGroup = personGroups[j];
+                var personGroupName = personGroups[j].properties.authorityName;
+                logger.debug("Iterating on person '"+name+"' Group '"+personGroupName+"'; contained? "+arrContains(groupNames,personGroupName));
+                if (arrContains(groupNames,personGroupName)) {
+                    isVisible = true;
+                }
+             }
+             logger.debug("Person '"+name+"' is visible? "+isVisible);
          }
-         logger.debug("Person '"+name+"' is visible? "+isVisible);
 
          //RRD: Filter OUT users that are NOT part of at least one visible groups
          if (!isVisible || site.getMembersRole(name) != null)
@@ -92,6 +98,7 @@ function main()
       //RRD: For backward-compatibility, keep the default behaviour if groupNames is null
       if (!groupNames) {
         model.peopleFound = peopleFound;
+        logger.debug("Show all people");
       }
    }
 
@@ -110,7 +117,7 @@ function main()
          name = groupsFound[i].fullName;
 
          //RRD: filter OUT groups whose name IS NOT contained in groupNames
-         if (!arrContains(groupNames,name) || site.getMembersRole(name) != null)
+         if ((groupNames && !arrContains(groupNames,name)) || site.getMembersRole(name) != null)
          {
             // Group is already a member
             notAllowed.push(name);
@@ -123,6 +130,7 @@ function main()
       //RRD: For backward-compatibility, keep the default behaviour if groupNames is null
       if (!groupNames) {
         model.groupsFound = groupsFound;
+        logger.debug("Show all groups");
       }
    }
    model.notAllowed = notAllowed;
