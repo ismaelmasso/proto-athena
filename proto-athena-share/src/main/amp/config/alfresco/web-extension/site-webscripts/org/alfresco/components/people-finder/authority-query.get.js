@@ -56,10 +56,10 @@ var getMappings = function()
 {
 
    //RRD: fetch siteName
-   //var sitName = url.url.split("/")[3];
+   //var sitName = url.url.split("/")[4];
    //@TODO - hardcoded for now, until authority-query.get.js is fixed
-   var siteName = "swsdp";
-
+   //var siteName = "swsdp";
+   var siteName = args.siteId;
    var mappings = [],
       authorityType = args.authorityType === null ? "all" : String(args.authorityType).toLowerCase(),
       siteScope = args.site !== null ? true : false ;

@@ -19,7 +19,9 @@ function main()
    var groupNames = siteNode.properties["rrdathena:groupNames"];
    if (groupNames == null) {
        groupNames = [];
-   } else if (showAll == "true") {
+   }
+
+   if (showAll == "true") {
        groupNames = null;
        logger.debug("Set groupNames to null, no filtering applied");
    }
