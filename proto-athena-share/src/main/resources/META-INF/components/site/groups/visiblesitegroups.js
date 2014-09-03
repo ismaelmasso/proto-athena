@@ -220,7 +220,7 @@
             {
                id: this.uniqueRecordId++,
                itemName: data.itemName,
-               displayName: data.itemName.split('_')[1]
+               displayName: data.itemName.substring(data.itemName.indexOf('_')+1)
             };
 
          var records = this.widgets.dataTable.getRecordSet().getRecords();
