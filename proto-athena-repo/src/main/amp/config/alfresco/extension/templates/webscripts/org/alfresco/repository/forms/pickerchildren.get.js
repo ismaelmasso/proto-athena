@@ -290,23 +290,39 @@ function findUsers(filterTerm, maxResults, results, siteFilter)
    }
 }
 
-//RRD - Return true if a person belongs to at least one site in common with the user currently logged in
+//RRD - Implementation #1 : show only users that belong to at least one group whitelisted within at least one site accessible by the current user
 function sitesMembership(personResult, currentUserSites) {
-  var sites = siteService.listUserSites(personResult.properties.userName, 1000);
   var foundCommonSite = false;
   currentUserSites.filter(function(n) {
-      for each(var st in sites) {
-        stName = st.node.properties["cm:name"];
-        nName = n.node.properties["cm:name"];
-        if (stName == nName) {
-          foundCommonSite = true;
+    var groupNames = n.node.properties["rrdathena:groupNames"];
+    for each (var groupName in groupNames) {
+        group = people.getGroup(groupName);
+        for each (var member in people.getMembers(group)) {
+            if (member.properties.userName == personResult.properties.userName) {
+                foundCommonSite = true;
+            }
         }
-      }
+    }
   });
   return foundCommonSite;
 }
 
-//RRD - @TODO
+//RRD - Implementation #2 : show only users that are members of at least one site in common with the current user
+//function sitesMembership(personResult, currentUserSites) {
+//  var sites = siteService.listUserSites(personResult.properties.userName, 1000);
+//  var foundCommonSite = false;
+//  currentUserSites.filter(function(n) {
+//      for each(var st in sites) {
+//        stName = st.node.properties["cm:name"];
+//        nName = n.node.properties["cm:name"];
+//        if (stName == nName) {
+//          foundCommonSite = true;
+//        }
+//      }
+//  });
+//  return foundCommonSite;
+//}
+
 function findGroups(searchTerm, maxResults, results, siteFilter)
 {
    if (logger.isLoggingEnabled())
