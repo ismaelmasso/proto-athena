@@ -105,19 +105,20 @@ var getMappings = function()
          fn: mapGroup
       });
 
-      mappings.push(
-      {
-         type: MAPPING_TYPE.STATIC,
-         data: [
-            {
-               shortName: "EVERYONE",
-               fullName: "GROUP_EVERYONE",
-               displayName: msg.get("group.everyone"),
-               description: "GROUP_EVERYONE"
-            }
-         ],
-         fn: mapGroup
-      });
+// RRD - Do not show EVERYONE group
+//      mappings.push(
+//      {
+//         type: MAPPING_TYPE.STATIC,
+//         data: [
+//            {
+//               shortName: "EVERYONE",
+//               fullName: "GROUP_EVERYONE",
+//               displayName: msg.get("group.everyone"),
+//               description: "GROUP_EVERYONE"
+//            }
+//         ],
+//         fn: mapGroup
+//      });
    }
    return mappings;
 };
