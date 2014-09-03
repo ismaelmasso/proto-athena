@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>co.uk.rrd.alfresco</groupId>
     <artifactId>proto-athena-parent</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -25,7 +25,7 @@
         <connection>scm:git:git@github.com:gerardharvey/proto-athena.git</connection>
         <url>scm:git:git@github.com:gerardharvey/proto-athena.git</url>
         <developerConnection>scm:git:git@github.com:gerardharvey/proto-athena.git</developerConnection>
-        <tag>proto-athena-parent-0.3.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
