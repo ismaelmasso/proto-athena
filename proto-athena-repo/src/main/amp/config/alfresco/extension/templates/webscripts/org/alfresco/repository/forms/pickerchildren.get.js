@@ -376,9 +376,11 @@ function sitesGroupMembership(groupResult, currentUserSites) {
 
 //RRD: util method (@TODO - duplicated with people.get.js and potentialmembers.get.js)
 function arrContains(arr, value) {
-    var i = arr.length;
-    while (i--) {
-    	if (arr[i] == value) return true;
+    if (arr) {
+        var i = arr.length;
+        while (i--) {
+            if (arr[i] == value) return true;
+        }
     }
     return false;
 }
