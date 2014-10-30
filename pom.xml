@@ -22,9 +22,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:gerardharvey/proto-athena.git</connection>
-        <url>scm:git:git@github.com:gerardharvey/proto-athena.git</url>
-        <developerConnection>scm:git:git@github.com:gerardharvey/proto-athena.git</developerConnection>
+        <connection>scm:git:git@github.com:ismaelmasso/proto-athena.git</connection>
+        <url>scm:git:git@github.com:ismaelmasso/proto-athena.git</url>
+        <developerConnection>scm:git:git@github.com:ismaelmasso/proto-athena.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
