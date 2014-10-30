@@ -21,6 +21,7 @@ Proto-athena was developed and tested against _Alfresco Enterprise 4.2.2_
 How to run the project
 ---
 
+
 ```
 cd proto-athena-repo
 mvn [clean] integration-test -Pamp-to-war [-Ppurge]
