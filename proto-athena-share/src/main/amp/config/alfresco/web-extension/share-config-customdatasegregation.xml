@@ -1,5 +1,6 @@
 <alfresco-config>
 
+
     <!-- How Forms of nodes having custom aspects should look like -->
     <config evaluator="aspect" condition="rrdathena:workflowsHolder">
         <forms>

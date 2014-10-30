@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:hz="http://www.hazelcast.com/schema/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                http://www.hazelcast.com/schema/config
+                http://www.hazelcast.com/schema/config/hazelcast-spring.xsd">
+   
+<bean id="custommodel.config" class="org.springframework.extensions.config.ConfigBootstrap"
+	init-method="register">
+	<property name="configService" ref="web.config" />
+	<property name="configs">
+		<list>
+			<value>classpath:alfresco/web-extension/share-config-customdatasegregation.xml
+			</value>
+		</list>
+	</property>
+</bean>
+
+</beans>
