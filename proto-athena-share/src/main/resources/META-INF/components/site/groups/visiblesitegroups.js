@@ -54,7 +54,7 @@
 
       // Decoupled event listeners
       YAHOO.Bubbling.on("itemSelected", this.onItemSelected, this);
-
+      YAHOO.Bubbling.on("hideUnhideButton", this.onhideUnhideButton, this);
       return this;
    };
    
@@ -106,7 +106,7 @@
          }
 
          // button to add all groups in the list
-         this.widgets.addButton = Alfresco.util.createYUIButton(this, "add-button", this.addButtonClick);
+         this.widgets.addButton = Alfresco.util.createYUIButton(this, "add-button", this.addButtonClick,{disabled: true});
 
          // setup the datasource
          var visibleSiteGroupsUrl = Alfresco.constants.PROXY_URI + "/api/sites/" + this.options.siteId + "/visiblesitegroups"
@@ -119,6 +119,10 @@
                 resultsList: "groups"
             }
          });
+         
+         this.widgets.righturl=visibleSiteGroupsUrl;
+         var rightSiteList = this.rightList.call(this,this);
+  		 this.widgets.rightSiteList = rightSiteList;
 
          // setup of the datatable
          this._setupDataTable();
@@ -129,6 +133,7 @@
             {
                // call the remove method
                me.removeItem.call(me, args[1].anchor);
+               YAHOO.Bubbling.fire("hideUnhideButton",args[1]);
                args[1].stop = true;
                return true;
             };
@@ -235,6 +240,7 @@
            this.widgets.dataTable.addRow(itemData);
          }
          this._enableDisableAddButton();
+         YAHOO.Bubbling.fire("hideUnhideButton",args[1]);
       },
 
       /**
@@ -314,6 +320,47 @@
 
          this._doAddResults(recordSet);
       },
+      
+      onhideUnhideButton : function VisibleSiteGroupsList_onhideUnhideButton(layer, args)
+      {
+    	  var records = this.widgets.dataTable.getRecordSet().getRecords(); 
+          if(this.widgets.rightSiteList!=null&&this.widgets.rightSiteList.groups!=null&&this.widgets.rightSiteList.groups.length!=null && records!=null && records.length!=null && this.widgets.rightSiteList.groups.length==records.length)
+         	 {
+        	  var dis = true;
+         	 for (var j = 0; j < this.widgets.rightSiteList.groups.length; j++)
+   	   		{
+         		 var found = false;
+         		 for (var i = 0; i < records.length; i++) {
+                      itemName = records[i].getData("itemName");
+                      if (itemName == this.widgets.rightSiteList.groups[j].itemName) {
+                    	  found=true;
+                     	 break;
+                      }
+                    }
+         		 if(found){
+         			dis=true; 
+         		 }else
+         			 {
+         			dis = false;
+         			break;
+         			 };
+   	   		}
+ 			 this.widgets.addButton.set('disabled', dis);
+         	 }else
+         		 {
+         		 this.widgets.addButton.set('disabled', false);
+         		 }
+      },
+      
+      rightList: function WorkFlowRightList(me)
+      {
+    	  //get the site list and remove them in all workflowlist
+   			var xhr = new XMLHttpRequest();	 
+    		xhr.open("GET",  me.widgets.righturl, false);
+    		xhr.send(null);
+    		var responseText = xhr.responseText;
+    		return  eval('(' + responseText + ')');
+      },
 
       /**
        * Adds one result and returns to _processResultData on completion.
@@ -327,6 +374,8 @@
          // success handler
          var success = function VisibleSiteGroupsList__doAddResult_success(response)
          {
+        	this.widgets.rightSiteList = this.rightList.call(this,this);
+            this.widgets.addButton.set('disabled', true);
             recordSet.success = true;
             this._processResultData(recordSet);
          };
