@@ -11,12 +11,25 @@ function main() {
 
     // Pass the queried sites to the template
     model.peoplelist = [];
+    var usad = people.getPerson(person.properties.userName)
+	if(people.isAdmin(usad)){
+	 model.peoplelist.push(peopleCollection);
+	 model.peoplelist = peopleCollection;
+	 return ;
+	}
+	
+    //RRD - Define list of site accessible by currently logged user
+    var userSites = null;
+      userSites = siteService.listUserSites(person.properties.userName, 1000);
+ 
+      notAllowed = [];
 
     //RRD: Fetch the user's groups; add the user *only if* there's one group in common
     //with groupNames list
-    if (siteShortName != null)
+    if(userSites==null) return ;
+    for(i in userSites)
     {
-        var site = siteService.getSite(siteShortName);
+        var site = siteService.getSite(userSites[i].shortName);
         if (site == null) {
             // Site cannot be found
             status.setCode(status.STATUS_NOT_FOUND, "The site " + siteShortName + " does not exist.");
@@ -35,7 +48,7 @@ function main() {
             for (j = 0, jj = personGroups.length; j < jj; j++) {
                 personGroup = personGroups[j];
                 var personGroupName = personGroups[j].properties.authorityName;
-                logger.debug("Iterating on person '"+name+"' Group '"+personGroupName+"'; contained? "+arrContains(groupNames,personGroupName));
+                logger.info(groupNames+"Iterating on person '"+name+"' Group '"+personGroupName+"'; contained? "+arrContains(groupNames,personGroupName));
                 if (arrContains(groupNames,personGroupName)) {
                     isVisible = true;
                 }
@@ -43,21 +56,36 @@ function main() {
             logger.debug("Person '"+name+"' is visible? "+isVisible);
 
             //RRD: Filter OUT users that are NOT part of at least one visible groups
-            if (isVisible)
+            if (isVisible && !containsuser(notAllowed,name))
             {
                 model.peoplelist.push(peopleCollection[i]);
+                notAllowed[i]=name;
             }
+            
+           
         }
-    } else {
+    }/* else {
         model.peoplelist = peopleCollection;
-    }
+    }*/
+    
+    notAllowed=null;
 }
 
 //RRD: util method (@TODO - duplicated with potentialmembers.get.js)
 function arrContains(arr, value) {
+if(arr==undefined||arr==null){arr=[];}
     var i = arr.length;
     while (i--) {
     	if (arr[i] == value) return true;
+    }
+    return false;
+}
+
+function containsuser(a, obj) {
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] === obj) {
+            return true;
+        }
     }
     return false;
 }
